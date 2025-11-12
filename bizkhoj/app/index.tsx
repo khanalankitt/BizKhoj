@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, FlatList, Text, TouchableOpacity, BackHandler } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -12,6 +13,7 @@ import Animated, {
 import { SearchBar, SearchBarRef } from '@/components/search-bar';
 import { CategoryCard } from '@/components/category-card';
 import { TrendingSearches } from '@/components/trending-searches';
+import { useLocation } from '@/contexts/location-context';
 
 const categories = [
   { id: '1', name: 'Restaurants', icon: 'silverware-fork-knife' as const, colors: ['#10B981', '#059669'] as const },
@@ -40,6 +42,7 @@ export default function Index() {
   const [searchText, setSearchText] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const searchBarRef = useRef<SearchBarRef>(null);
+  const { selectedLocation } = useLocation();
   
   const searchBarTranslateY = useSharedValue(0);
   const categoriesOpacity = useSharedValue(1);
@@ -60,7 +63,6 @@ export default function Index() {
 
   const handleSearchFocus = () => {
     setIsSearchFocused(true);
-    searchBarTranslateY.value = withTiming(-10, { duration: 250, easing: Easing.out(Easing.ease) });
     categoriesOpacity.value = withTiming(0, { duration: 250, easing: Easing.out(Easing.ease) });
     categoriesTranslateY.value = withTiming(20, { duration: 250, easing: Easing.out(Easing.ease) });
   };
@@ -85,6 +87,10 @@ export default function Index() {
 
   const handleTrendingSelect = (search: string) => {
     setSearchText(search);
+  };
+
+  const handleLocationPress = () => {
+    router.push('/location-selection');
   };
 
   const searchBarAnimatedStyle = useAnimatedStyle(() => ({
@@ -113,10 +119,22 @@ export default function Index() {
               <Ionicons name="person-circle-outline" size={32} color="#374151" />
             </TouchableOpacity>
           )}
-          <View style={styles.appNameContainer}>
-            <Text style={styles.appNameBiz}>Biz</Text>
-            <Text style={styles.appNameKhoj}>Khoj</Text>
-          </View>
+          
+          {isSearchFocused ? (
+            <TouchableOpacity style={styles.locationSelector} onPress={handleLocationPress}>
+              <Ionicons name="location" size={18} color="#0D9488" />
+              <Text style={styles.locationText} numberOfLines={1}>
+                {selectedLocation || 'Select Location'}
+              </Text>
+              <Ionicons name="chevron-down" size={18} color="#9CA3AF" />
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.appNameContainer}>
+              <Text style={styles.appNameBiz}>Biz</Text>
+              <Text style={styles.appNameKhoj}>Khoj</Text>
+            </View>
+          )}
+          
           <TouchableOpacity style={styles.headerIcon}>
             <View style={styles.notificationBadge} />
             <Ionicons name="notifications-outline" size={28} color="#374151" />
@@ -218,6 +236,25 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#F97316',
     letterSpacing: 0.5,
+  },
+  locationSelector: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F0FDFA',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#CCFBF1',
+    maxWidth: '60%',
+  },
+  locationText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#0D9488',
+    marginLeft: 6,
+    marginRight: 4,
+    flex: 1,
   },
   scrollView: {
     flex: 1,
