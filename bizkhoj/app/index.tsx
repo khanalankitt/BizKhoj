@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, FlatList, Text, TouchableOpacity, BackHandler } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
-  withSpring,
+  withTiming,
+  Easing,
 } from 'react-native-reanimated';
 
-import { SearchBar } from '@/components/search-bar';
+import { SearchBar, SearchBarRef } from '@/components/search-bar';
 import { CategoryCard } from '@/components/category-card';
 import { TrendingSearches } from '@/components/trending-searches';
 
@@ -38,8 +39,9 @@ const categories = [
 export default function Index() {
   const [searchText, setSearchText] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const searchBarRef = useRef<SearchBarRef>(null);
   
-  const headerTranslateY = useSharedValue(0);
+  const searchBarTranslateY = useSharedValue(0);
   const categoriesOpacity = useSharedValue(1);
   const categoriesTranslateY = useSharedValue(0);
 
@@ -58,34 +60,35 @@ export default function Index() {
 
   const handleSearchFocus = () => {
     setIsSearchFocused(true);
-    headerTranslateY.value = withSpring(-20, { damping: 20 });
-    categoriesOpacity.value = withSpring(0, { damping: 20 });
-    categoriesTranslateY.value = withSpring(20, { damping: 20 });
+    searchBarTranslateY.value = withTiming(-10, { duration: 250, easing: Easing.out(Easing.ease) });
+    categoriesOpacity.value = withTiming(0, { duration: 250, easing: Easing.out(Easing.ease) });
+    categoriesTranslateY.value = withTiming(20, { duration: 250, easing: Easing.out(Easing.ease) });
   };
 
   const handleSearchBlur = () => {
     if (!searchText) {
       setIsSearchFocused(false);
-      headerTranslateY.value = withSpring(0, { damping: 20 });
-      categoriesOpacity.value = withSpring(1, { damping: 20 });
-      categoriesTranslateY.value = withSpring(0, { damping: 20 });
+      searchBarTranslateY.value = withTiming(0, { duration: 250, easing: Easing.out(Easing.ease) });
+      categoriesOpacity.value = withTiming(1, { duration: 250, easing: Easing.out(Easing.ease) });
+      categoriesTranslateY.value = withTiming(0, { duration: 250, easing: Easing.out(Easing.ease) });
     }
   };
 
   const handleBackPress = () => {
+    searchBarRef.current?.blur();
     setIsSearchFocused(false);
     setSearchText('');
-    headerTranslateY.value = withSpring(0, { damping: 20 });
-    categoriesOpacity.value = withSpring(1, { damping: 20 });
-    categoriesTranslateY.value = withSpring(0, { damping: 20 });
+    searchBarTranslateY.value = withTiming(0, { duration: 250, easing: Easing.out(Easing.ease) });
+    categoriesOpacity.value = withTiming(1, { duration: 250, easing: Easing.out(Easing.ease) });
+    categoriesTranslateY.value = withTiming(0, { duration: 250, easing: Easing.out(Easing.ease) });
   };
 
   const handleTrendingSelect = (search: string) => {
     setSearchText(search);
   };
 
-  const headerAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: headerTranslateY.value }],
+  const searchBarAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: searchBarTranslateY.value }],
   }));
 
   const categoriesAnimatedStyle = useAnimatedStyle(() => ({
@@ -100,7 +103,7 @@ export default function Index() {
         edges={isSearchFocused ? ['top', 'bottom'] : ['top']}
       >
         {/* Header */}
-        <Animated.View style={[styles.header, headerAnimatedStyle]}>
+        <View style={styles.header}>
           {isSearchFocused ? (
             <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
               <Ionicons name="arrow-back" size={28} color="#374151" />
@@ -118,15 +121,18 @@ export default function Index() {
             <View style={styles.notificationBadge} />
             <Ionicons name="notifications-outline" size={28} color="#374151" />
           </TouchableOpacity>
-        </Animated.View>
+        </View>
 
         {/* Search Bar */}
-        <SearchBar 
-          value={searchText} 
-          onChangeText={setSearchText}
-          onFocus={handleSearchFocus}
-          onBlur={handleSearchBlur}
-        />
+        <Animated.View style={searchBarAnimatedStyle}>
+          <SearchBar 
+            ref={searchBarRef}
+            value={searchText} 
+            onChangeText={setSearchText}
+            onFocus={handleSearchFocus}
+            onBlur={handleSearchBlur}
+          />
+        </Animated.View>
 
         {/* Content - Categories or Trending Searches */}
         {isSearchFocused ? (
@@ -139,7 +145,6 @@ export default function Index() {
                 name={item.name}
                 icon={item.icon}
                 colors={item.colors}
-                delay={index * 30}
                 onPress={() => console.log(`${item.name} pressed`)}
               />
             )}
@@ -167,7 +172,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingVertical: 5,
   },
   headerIcon: {
     width: 40,

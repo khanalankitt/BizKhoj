@@ -1,13 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  withDelay,
-} from 'react-native-reanimated';
 
 interface CategoryCardProps {
   name: string;
@@ -17,29 +11,11 @@ interface CategoryCardProps {
   onPress?: () => void;
 }
 
-export function CategoryCard({ name, icon, colors, delay = 0, onPress }: CategoryCardProps) {
-  const scale = useSharedValue(0);
-  const opacity = useSharedValue(0);
+export function CategoryCard({ name, icon, colors, onPress }: CategoryCardProps) {
   const [isPressed, setIsPressed] = useState(false);
 
-  useEffect(() => {
-    scale.value = withDelay(
-      delay,
-      withSpring(1, {
-        damping: 15,
-        stiffness: 100,
-      })
-    );
-    opacity.value = withDelay(delay, withSpring(1));
-  }, [delay]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-    opacity: opacity.value,
-  }));
-
   return (
-    <Animated.View style={[styles.container, animatedStyle]}>
+    <View style={styles.container}>
       <TouchableOpacity 
         style={[styles.touchable, isPressed && styles.touchablePressed]} 
         onPress={onPress} 
@@ -52,7 +28,7 @@ export function CategoryCard({ name, icon, colors, delay = 0, onPress }: Categor
         </LinearGradient>
         <Text style={styles.name} numberOfLines={2}>{name}</Text>
       </TouchableOpacity>
-    </Animated.View>
+    </View>
   );
 }
 

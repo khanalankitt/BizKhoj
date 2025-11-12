@@ -1,12 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, forwardRef, useImperativeHandle, useRef } from 'react';
 import { StyleSheet, TextInput, View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
-  withRepeat,
-  withSequence,
   Easing,
 } from 'react-native-reanimated';
 
@@ -18,6 +16,10 @@ interface SearchBarProps {
   autoFocus?: boolean;
 }
 
+export interface SearchBarRef {
+  blur: () => void;
+}
+
 const placeholders = [
   'Search plumbers...',
   'Find restaurants...',
@@ -27,13 +29,21 @@ const placeholders = [
   'Find hotels...',
 ];
 
-export function SearchBar({ onChangeText, value, onFocus, onBlur, autoFocus }: SearchBarProps) {
-  const [currentPlaceholder, setCurrentPlaceholder] = React.useState(placeholders[0]);
-  const [isFocused, setIsFocused] = React.useState(false);
-  const translateY = useSharedValue(0);
-  const opacity = useSharedValue(1);
+export const SearchBar = forwardRef<SearchBarRef, SearchBarProps>(
+  ({ onChangeText, value, onFocus, onBlur, autoFocus }, ref) => {
+    const [currentPlaceholder, setCurrentPlaceholder] = React.useState(placeholders[0]);
+    const [isFocused, setIsFocused] = React.useState(false);
+    const translateY = useSharedValue(0);
+    const opacity = useSharedValue(1);
+    const inputRef = useRef<TextInput>(null);
 
-  useEffect(() => {
+    useImperativeHandle(ref, () => ({
+      blur: () => {
+        inputRef.current?.blur();
+      },
+    }));
+
+    useEffect(() => {
     if (isFocused || value) return; // Don't animate placeholder when focused or when there's text
 
     let currentIndex = 0;
@@ -71,38 +81,38 @@ export function SearchBar({ onChangeText, value, onFocus, onBlur, autoFocus }: S
     onBlur?.();
   };
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: translateY.value }],
-    opacity: opacity.value,
-  }));
+    const animatedStyle = useAnimatedStyle(() => ({
+      transform: [{ translateY: translateY.value }],
+      opacity: opacity.value,
+    }));
 
-  return (
-    <View style={styles.container}>
-      <Ionicons name="search" size={18} color="#9CA3AF" style={styles.icon} />
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeText}
-          value={value}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          autoFocus={autoFocus}
-          placeholderTextColor="transparent"
-        />
-        {!value && !isFocused && (
-          <Animated.Text style={[styles.animatedPlaceholder, animatedStyle]}>
-            {currentPlaceholder}
-          </Animated.Text>
-        )}
-        {!value && isFocused && (
-          <Text style={styles.staticPlaceholder}>Search for services...</Text>
-        )}
+    return (
+      <View style={styles.container}>
+        <Ionicons name="search" size={18} color="#9CA3AF" style={styles.icon} />
+        <View style={styles.inputContainer}>
+          <TextInput
+            ref={inputRef}
+            style={styles.input}
+            onChangeText={onChangeText}
+            value={value}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            autoFocus={autoFocus}
+            placeholderTextColor="transparent"
+          />
+          {!value && !isFocused && (
+            <Animated.Text style={[styles.animatedPlaceholder, animatedStyle]}>
+              {currentPlaceholder}
+            </Animated.Text>
+          )}
+          {!value && isFocused && (
+            <Text style={styles.staticPlaceholder}>Search for services...</Text>
+          )}
+        </View>
       </View>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
+    );
+  }
+);const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -130,6 +140,7 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
   input: {
     fontSize: 15,
@@ -143,7 +154,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#9CA3AF',
     left: 0,
-    top: 0,
+    top: -1,
   },
   staticPlaceholder: {
     position: 'absolute',

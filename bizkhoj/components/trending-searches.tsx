@@ -1,12 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  withDelay,
-} from 'react-native-reanimated';
 
 interface TrendingSearchesProps {
   onSearchSelect: (search: string) => void;
@@ -26,70 +20,40 @@ const trendingSearches = [
 ];
 
 export function TrendingSearches({ onSearchSelect }: TrendingSearchesProps) {
-  const opacity = useSharedValue(0);
-  const translateY = useSharedValue(20);
-
-  useEffect(() => {
-    opacity.value = withSpring(1, { damping: 20 });
-    translateY.value = withSpring(0, { damping: 20 });
-  }, []);
-
-  const containerStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ translateY: translateY.value }],
-  }));
-
   return (
-    <Animated.View style={[styles.container, containerStyle]}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <Ionicons name="flame" size={20} color="#EF4444" />
         <Text style={styles.title}>Trending Searches</Text>
       </View>
       <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
-        {trendingSearches.map((item, index) => (
+        {trendingSearches.map((item) => (
           <TrendingItem
             key={item.id}
             text={item.text}
             icon={item.icon}
-            delay={index * 40}
             onPress={() => onSearchSelect(item.text)}
           />
         ))}
         <View style={styles.bottomSpacing} />
       </ScrollView>
-    </Animated.View>
+    </View>
   );
 }
 
 interface TrendingItemProps {
   text: string;
   icon: keyof typeof Ionicons.glyphMap;
-  delay: number;
   onPress: () => void;
 }
 
-function TrendingItem({ text, icon, delay, onPress }: TrendingItemProps) {
-  const opacity = useSharedValue(0);
-  const translateX = useSharedValue(-20);
-
-  useEffect(() => {
-    opacity.value = withDelay(delay, withSpring(1));
-    translateX.value = withDelay(delay, withSpring(0));
-  }, [delay]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    transform: [{ translateX: translateX.value }],
-  }));
-
+function TrendingItem({ text, icon, onPress }: TrendingItemProps) {
   return (
-    <Animated.View style={animatedStyle}>
-      <TouchableOpacity style={styles.item} onPress={onPress} activeOpacity={0.7}>
-        <Ionicons name={icon} size={20} color="#6B7280" style={styles.itemIcon} />
-        <Text style={styles.itemText}>{text}</Text>
-        <Ionicons name="arrow-forward" size={18} color="#9CA3AF" />
-      </TouchableOpacity>
-    </Animated.View>
+    <TouchableOpacity style={styles.item} onPress={onPress} activeOpacity={0.7}>
+      <Ionicons name={icon} size={20} color="#6B7280" style={styles.itemIcon} />
+      <Text style={styles.itemText}>{text}</Text>
+      <Ionicons name="arrow-forward" size={18} color="#9CA3AF" />
+    </TouchableOpacity>
   );
 }
 
