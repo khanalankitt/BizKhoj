@@ -11,7 +11,7 @@
     "ios": {
       "supportsTablet": true
     },
-    "updates":{
+    "updates": {
       "url": "https://u.expo.dev/ce278195-c2cd-49a4-af05-b8097d7dba4c",
       "fallbackToCacheTimeout": 0
     },
@@ -21,7 +21,8 @@
         "foregroundImage": "./assets/images/bizkhoj.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.ankitkhanal2.bizkhoj"
     },
     "web": {
       "output": "static",

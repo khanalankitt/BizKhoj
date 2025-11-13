@@ -26,6 +26,34 @@ export default function RootLayout() {
               animation: 'slide_from_bottom',
             }} 
           />
+          <Stack.Screen 
+            name="category/[slug]" 
+            options={{ 
+              headerShown: false,
+              animation: 'slide_from_right',
+            }} 
+          />
+          <Stack.Screen 
+            name="business/[id]" 
+            options={{ 
+              headerShown: false,
+              animation: 'slide_from_right',
+            }} 
+          />
+          <Stack.Screen 
+            name="profile" 
+            options={{ 
+              headerShown: false,
+              animation: 'slide_from_left',
+            }} 
+          />
+          <Stack.Screen 
+            name="notifications" 
+            options={{ 
+              headerShown: false,
+              animation: 'slide_from_right',
+            }} 
+          />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
         </Stack>

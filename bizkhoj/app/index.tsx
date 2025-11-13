@@ -115,7 +115,10 @@ export default function Index() {
               <Ionicons name="arrow-back" size={28} color="#374151" />
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity style={styles.headerIcon}>
+            <TouchableOpacity 
+              style={styles.headerIcon}
+              onPress={() => router.push('/profile')}
+            >
               <Ionicons name="person-circle-outline" size={32} color="#374151" />
             </TouchableOpacity>
           )}
@@ -135,7 +138,10 @@ export default function Index() {
             </View>
           )}
           
-          <TouchableOpacity style={styles.headerIcon}>
+          <TouchableOpacity 
+            style={styles.headerIcon}
+            onPress={() => router.push('/notifications')}
+          >
             <View style={styles.notificationBadge} />
             <Ionicons name="notifications-outline" size={28} color="#374151" />
           </TouchableOpacity>
@@ -163,7 +169,7 @@ export default function Index() {
                 name={item.name}
                 icon={item.icon}
                 colors={item.colors}
-                onPress={() => console.log(`${item.name} pressed`)}
+                onPress={() => router.push(`/category/${item.name}`)}
               />
             )}
             keyExtractor={(item) => item.id}
