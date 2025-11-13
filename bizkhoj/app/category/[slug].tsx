@@ -127,7 +127,6 @@ const getMockBusinesses = (category: string): Business[] => {
 
 export default function CategoryScreen() {
   const { slug } = useLocalSearchParams();
-  const { selectedLocation } = useLocation();
   const [loading, setLoading] = useState(false);
   
   const categoryName = typeof slug === 'string' ? slug : 'Category';
@@ -171,7 +170,10 @@ export default function CategoryScreen() {
         horizontal
         showsHorizontalScrollIndicator={false}
         style={styles.imageGallery}
-        contentContainerStyle={styles.imageGalleryContent}
+        contentContainerStyle={[
+          styles.imageGalleryContent,
+          item.images.length === 1 && styles.imageGalleryCentered
+        ]}
       >
         {item.images.map((image, index) => (
           <TouchableOpacity
@@ -185,14 +187,6 @@ export default function CategoryScreen() {
         ))}
       </ScrollView>
 
-      {/* Image Counter */}
-      {item.images.length > 1 && (
-        <View style={styles.imageCounter}>
-          <Ionicons name="images" size={12} color="#fff" />
-          <Text style={styles.imageCounterText}>{item.images.length}</Text>
-        </View>
-      )}
-
       {/* Content Section */}
       <TouchableOpacity
         style={styles.content}
@@ -205,14 +199,14 @@ export default function CategoryScreen() {
           </Text>
           
           <View style={styles.ratingContainer}>
-            <Ionicons name="star" size={14} color="#FFA500" />
+            <Ionicons name="star" size={13} color="#FFA500" />
             <Text style={styles.rating}>{item.rating}</Text>
             <Text style={styles.reviewCount}>({item.reviewCount})</Text>
           </View>
         </View>
 
         <View style={styles.locationRow}>
-          <Ionicons name="location-outline" size={14} color="#666" />
+          <Ionicons name="location-outline" size={13} color="#666" />
           <Text style={styles.address} numberOfLines={1}>
             {item.address}
           </Text>
@@ -246,8 +240,8 @@ export default function CategoryScreen() {
             handleCall(item.phone);
           }}
         >
-          <Ionicons name="call" size={18} color="#fff" />
-          <Text style={styles.actionButtonText}>Call</Text>
+          <Ionicons name="call" size={16} color="#fff" />
+          <Text style={styles.callButtonText}>Call Now</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -257,7 +251,7 @@ export default function CategoryScreen() {
             handleWhatsApp(item.phone);
           }}
         >
-          <MaterialCommunityIcons name="whatsapp" size={18} color="#fff" />
+          <MaterialCommunityIcons name="whatsapp" size={16} color="green" />
           <Text style={styles.actionButtonText}>WhatsApp</Text>
         </TouchableOpacity>
 
@@ -268,7 +262,7 @@ export default function CategoryScreen() {
             handleDirections(item.address);
           }}
         >
-          <Ionicons name="navigate" size={18} color="#fff" />
+          <Ionicons name="navigate" size={16} color="#000" />
           <Text style={styles.actionButtonText}>Direction</Text>
         </TouchableOpacity>
 
@@ -279,7 +273,7 @@ export default function CategoryScreen() {
             handleShare(item);
           }}
         >
-          <Ionicons name="share-social" size={18} color="#fff" />
+          <Ionicons name="share-social" size={16} color="#000" />
           <Text style={styles.actionButtonText}>Share</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -360,30 +354,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   listContent: {
-    padding: 16,
+    padding: 12,
   },
   card: {
     backgroundColor: '#fff',
-    borderRadius: 16,
-    marginBottom: 16,
+    borderRadius: 12,
+    marginBottom: 12,
     overflow: 'hidden',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
   },
   imageGallery: {
-    height: 200,
+    paddingTop: 12,
+    height: 180,
   },
   imageGalleryContent: {
     paddingHorizontal: 12,
-    gap: 12,
+    gap: 10,
+  },
+  imageGalleryCentered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   imageWrapper: {
-    width: 280,
-    height: 200,
-    borderRadius: 12,
+    width: 220,
+    height: 160,
+    borderRadius: 10,
     overflow: 'hidden',
   },
   image: {
@@ -391,64 +391,51 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: '#e5e7eb',
   },
-  imageCounter: {
-    position: 'absolute',
-    top: 12,
-    right: 12,
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  imageCounterText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: '600',
-  },
   content: {
-    padding: 16,
+    padding: 12,
   },
   header: {
-    marginBottom: 10,
+    marginBottom: 8,
   },
   name: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '700',
     color: '#000',
-    marginBottom: 6,
+    marginBottom: 5,
   },
   ratingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   rating: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '600',
     color: '#000',
-    marginLeft: 4,
+    marginLeft: 3,
   },
   reviewCount: {
-    fontSize: 13,
+    fontSize: 12,
     color: '#666',
-    marginLeft: 4,
+    marginLeft: 3,
   },
   locationRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 8,
   },
   address: {
-    fontSize: 14,
+    fontSize: 13,
     color: '#666',
-    marginLeft: 4,
+    marginLeft: 3,
     flex: 1,
   },
   distance: {
-    fontSize: 13,
-    color: '#14b8a6',
+    fontSize: 12,
+    color: 'green',
+    backgroundColor: '#d1fae5',
+    paddingVertical: 4,
+    paddingHorizontal: 6,
+    borderRadius: 6,
     fontWeight: '600',
     marginLeft: 4,
   },
@@ -459,10 +446,10 @@ const styles = StyleSheet.create({
   statusBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 8,
-    marginRight: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    marginRight: 8,
   },
   openBadge: {
     backgroundColor: '#d1fae5',
@@ -471,10 +458,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fee2e2',
   },
   statusDot: {
-    width: 6,
-    height: 6,
+    width: 5,
+    height: 5,
     borderRadius: 3,
-    marginRight: 5,
+    marginRight: 4,
   },
   openDot: {
     backgroundColor: '#10b981',
@@ -483,7 +470,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ef4444',
   },
   statusText: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '600',
   },
   openText: {
@@ -493,43 +480,53 @@ const styles = StyleSheet.create({
     color: '#dc2626',
   },
   hours: {
-    fontSize: 13,
+    fontSize: 12,
     color: '#666',
   },
   actions: {
     borderTopWidth: 1,
     borderTopColor: '#f3f4f6',
-    paddingTop: 16,
-    paddingBottom: 12,
+    paddingTop: 12,
+    paddingBottom: 10,
   },
   actionsScrollContent: {
-    paddingHorizontal: 16,
-    gap: 10,
+    paddingHorizontal: 12,
+    gap: 8,
   },
   actionButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 10,
-    gap: 6,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 8,
+    gap: 5,
+    borderWidth: 1,
   },
   callButton: {
-    backgroundColor: '#14b8a6',
+    backgroundColor: '#3b82f6',
+    borderColor: '#3b82f6',
   },
   whatsappButton: {
-    backgroundColor: '#25D366',
+    backgroundColor: '#fff',
+    borderColor: '#000',
   },
   directionButton: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#fff',
+    borderColor: '#000',
   },
   shareButton: {
-    backgroundColor: '#8b5cf6',
+    backgroundColor: '#fff',
+    borderColor: '#000',
+  },
+  callButtonText: {
+    color: '#fff',
+    fontSize: 13,
+    fontWeight: '600',
   },
   actionButtonText: {
-    color: '#fff',
-    fontSize: 14,
+    color: '#000',
+    fontSize: 13,
     fontWeight: '600',
   },
 });

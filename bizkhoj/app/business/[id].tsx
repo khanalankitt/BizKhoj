@@ -203,15 +203,15 @@ export default function BusinessDetailScreen() {
               style={[styles.actionBtn, styles.callBtn]}
               onPress={handleCall}
             >
-              <Ionicons name="call" size={20} color="#fff" />
-              <Text style={styles.actionBtnText}>Call</Text>
+              <Ionicons name="call" size={18} color="#fff" />
+              <Text style={styles.callBtnText}>Call Now</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={[styles.actionBtn, styles.whatsappBtn]}
               onPress={handleWhatsApp}
             >
-              <MaterialCommunityIcons name="whatsapp" size={20} color="#fff" />
+              <MaterialCommunityIcons name="whatsapp" size={18} color="#000" />
               <Text style={styles.actionBtnText}>WhatsApp</Text>
             </TouchableOpacity>
 
@@ -219,7 +219,7 @@ export default function BusinessDetailScreen() {
               style={[styles.actionBtn, styles.directionBtn]}
               onPress={handleDirections}
             >
-              <Ionicons name="navigate" size={20} color="#fff" />
+              <Ionicons name="navigate" size={18} color="#000" />
               <Text style={styles.actionBtnText}>Direction</Text>
             </TouchableOpacity>
 
@@ -227,7 +227,7 @@ export default function BusinessDetailScreen() {
               style={[styles.actionBtn, styles.shareBtn]}
               onPress={handleShare}
             >
-              <Ionicons name="share-social" size={20} color="#fff" />
+              <Ionicons name="share-social" size={18} color="#000" />
               <Text style={styles.actionBtnText}>Share</Text>
             </TouchableOpacity>
           </ScrollView>
@@ -348,10 +348,10 @@ const styles = StyleSheet.create({
     width: 24,
   },
   content: {
-    padding: 20,
+    padding: 16,
   },
   header: {
-    marginBottom: 20,
+    marginBottom: 16,
   },
   headerTop: {
     flexDirection: 'row',
@@ -400,7 +400,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   section: {
-    marginBottom: 24,
+    marginBottom: 20,
   },
   sectionTitle: {
     fontSize: 18,
@@ -457,36 +457,46 @@ const styles = StyleSheet.create({
     color: '#666',
   },
   actionButtonsContainer: {
-    marginBottom: 20,
+    marginBottom: 16,
   },
   actionsScrollContent: {
-    paddingHorizontal: 20,
-    gap: 12,
+    paddingRight: 20,
+    gap: 10,
   },
   actionBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 24,
-    paddingVertical: 14,
-    borderRadius: 12,
-    gap: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 10,
+    gap: 6,
+    borderWidth: 1,
   },
   callBtn: {
-    backgroundColor: '#14b8a6',
+    backgroundColor: '#3b82f6',
+    borderColor: '#3b82f6',
   },
   whatsappBtn: {
-    backgroundColor: '#25D366',
+    backgroundColor: '#fff',
+    borderColor: '#000',
   },
   directionBtn: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#fff',
+    borderColor: '#000',
   },
   shareBtn: {
-    backgroundColor: '#8b5cf6',
+    backgroundColor: '#fff',
+    borderColor: '#000',
+  },
+  callBtnText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
   },
   actionBtnText: {
-    color: '#fff',
-    fontSize: 15,
+    color: '#000',
+    fontSize: 14,
     fontWeight: '600',
   },
   locationCard: {
