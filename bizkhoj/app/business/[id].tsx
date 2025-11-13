@@ -460,7 +460,7 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   actionsScrollContent: {
-    paddingLeft: 14,
+    paddingLeft: 2,
     paddingRight: 14,
     gap: 8,
   },

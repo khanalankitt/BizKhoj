@@ -57,7 +57,7 @@
     },
     "owner": "ankitkhanal-2",
     "runtimeVersion": {
-      "policy": "appVersion"
+      "policy": "sdkVersion"
     }
   }
 }

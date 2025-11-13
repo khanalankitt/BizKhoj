@@ -50,6 +50,20 @@ export default function RootLayout() {
               animation: 'slide_from_right',
             }} 
           />
+          <Stack.Screen 
+            name="login" 
+            options={{ 
+              headerShown: false,
+              animation: 'slide_from_bottom',
+            }} 
+          />
+          <Stack.Screen 
+            name="register" 
+            options={{ 
+              headerShown: false,
+              animation: 'slide_from_right',
+            }} 
+          />
         </Stack>
         <StatusBar style="dark" />
       </ThemeProvider>

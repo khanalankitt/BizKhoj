@@ -1,5 +1,5 @@
 import React, { useEffect, forwardRef, useImperativeHandle, useRef } from 'react';
-import { StyleSheet, TextInput, View, Text } from 'react-native';
+import { StyleSheet, TextInput, View, Text, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Animated, {
   useSharedValue,
@@ -86,8 +86,12 @@ export const SearchBar = forwardRef<SearchBarRef, SearchBarProps>(
       opacity: opacity.value,
     }));
 
+    const handleContainerPress = () => {
+      inputRef.current?.focus();
+    };
+
     return (
-      <View style={styles.container}>
+      <Pressable style={styles.container} onPress={handleContainerPress}>
         <Ionicons name="search" size={18} color="#9CA3AF" style={styles.icon} />
         <View style={styles.inputContainer}>
           <TextInput
@@ -109,7 +113,7 @@ export const SearchBar = forwardRef<SearchBarRef, SearchBarProps>(
             <Text style={styles.staticPlaceholder}>Search for services...</Text>
           )}
         </View>
-      </View>
+      </Pressable>
     );
   }
 );const styles = StyleSheet.create({
