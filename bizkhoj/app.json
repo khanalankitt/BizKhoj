@@ -55,6 +55,9 @@
         "projectId": "ce278195-c2cd-49a4-af05-b8097d7dba4c"
       }
     },
-    "owner": "ankitkhanal-2"
+    "owner": "ankitkhanal-2",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
   }
 }
