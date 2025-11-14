@@ -22,50 +22,66 @@ interface Notification {
 const mockNotifications: Notification[] = [
   {
     id: '1',
-    type: 'success',
-    title: 'Review Posted',
-    message: 'Your review for "Elegant Hair Studio" has been published.',
-    time: '2 hours ago',
+    type: 'info',
+    title: 'Someone saved your review',
+    message: 'Your review of Mountain View Cafe was marked as helpful by 3 people.',
+    time: '45m',
     read: false,
   },
   {
     id: '2',
-    type: 'promo',
-    title: 'Special Offer!',
-    message: 'Get 20% off at Style Icon Salon this weekend. Book now!',
-    time: '5 hours ago',
+    type: 'success',
+    title: 'Review published',
+    message: 'Your review of Royal Bakery is now live.',
+    time: '2h',
     read: false,
   },
   {
     id: '3',
-    type: 'info',
-    title: 'New Business Nearby',
-    message: 'The Grooming Lounge just opened 0.5km away from you.',
-    time: '1 day ago',
-    read: true,
+    type: 'promo',
+    title: 'Weekend special',
+    message: 'The Coffee Hub: Buy 2 get 1 free on all beverages. Valid until Sunday.',
+    time: '4h',
+    read: false,
   },
   {
     id: '4',
-    type: 'warning',
-    title: 'Hours Changed',
-    message: 'Bella Hair & Spa has updated their operating hours.',
-    time: '2 days ago',
+    type: 'info',
+    title: 'Price update',
+    message: 'Green Valley Restaurant has updated their menu prices.',
+    time: '1d',
     read: true,
   },
   {
     id: '5',
-    type: 'info',
-    title: 'Favorite Place Updated',
-    message: 'Premium Cuts has added new services. Check them out!',
-    time: '3 days ago',
+    type: 'warning',
+    title: 'Temporary closure',
+    message: 'Sunrise Gym will be closed for renovation from Dec 1-5.',
+    time: '1d',
     read: true,
   },
   {
     id: '6',
-    type: 'success',
-    title: 'Booking Confirmed',
-    message: 'Your appointment at Elegant Hair Studio is confirmed for tomorrow at 2 PM.',
-    time: '4 days ago',
+    type: 'info',
+    title: 'New photos added',
+    message: 'Urban Fitness Center added 8 new photos to their gallery.',
+    time: '2d',
+    read: true,
+  },
+  {
+    id: '7',
+    type: 'promo',
+    title: 'Flash sale',
+    message: 'Books & Beyond: 40% off on all bestsellers. Today only.',
+    time: '3d',
+    read: true,
+  },
+  {
+    id: '8',
+    type: 'info',
+    title: 'Business responded',
+    message: 'Pearl Dental Clinic replied to your review.',
+    time: '3d',
     read: true,
   },
 ];
@@ -125,7 +141,7 @@ export default function NotificationsScreen() {
       activeOpacity={0.7}
     >
       <View style={[styles.iconContainer, { backgroundColor: getBackgroundColor(item.type) }]}>
-        <Ionicons name={getIconName(item.type) as any} size={24} color={getIconColor(item.type)} />
+        <Ionicons name={getIconName(item.type) as any} size={20} color={getIconColor(item.type)} />
       </View>
       
       <View style={styles.notificationContent}>
@@ -171,8 +187,8 @@ export default function NotificationsScreen() {
       {notifications.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Ionicons name="notifications-off-outline" size={80} color="#ccc" />
-          <Text style={styles.emptyTitle}>No notifications</Text>
-          <Text style={styles.emptySubtitle}>You're all caught up!</Text>
+          <Text style={styles.emptyTitle}>No notifications yet</Text>
+          <Text style={styles.emptySubtitle}>We'll notify you when something new happens</Text>
         </View>
       ) : (
         <FlatList
@@ -238,31 +254,35 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   listContent: {
-    padding: 16,
+    padding: 12,
   },
   notificationItem: {
     flexDirection: 'row',
     backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 8,
+    borderLeftWidth: 3,
+    borderLeftColor: '#e5e7eb',
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+  },
+  unreadNotification: {
+    borderLeftWidth: 3,
+    borderLeftColor: '#14b8a6',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 2,
   },
-  unreadNotification: {
-    borderLeftWidth: 3,
-    borderLeftColor: '#14b8a6',
-  },
   iconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginRight: 10,
   },
   notificationContent: {
     flex: 1,
@@ -270,29 +290,29 @@ const styles = StyleSheet.create({
   notificationHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 4,
+    marginBottom: 2,
   },
   notificationTitle: {
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 15,
+    fontWeight: '600',
     color: '#000',
     flex: 1,
   },
   unreadDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
     backgroundColor: '#14b8a6',
-    marginLeft: 8,
+    marginLeft: 6,
   },
   notificationMessage: {
-    fontSize: 14,
+    fontSize: 13,
     color: '#666',
-    lineHeight: 20,
-    marginBottom: 6,
+    lineHeight: 18,
+    marginBottom: 4,
   },
   notificationTime: {
-    fontSize: 12,
+    fontSize: 11,
     color: '#999',
   },
   emptyContainer: {

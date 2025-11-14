@@ -44,7 +44,7 @@ const getMockBusinesses = (category: string): Business[] => {
       ],
       rating: 4.8,
       reviewCount: 234,
-      address: 'Thamel, Kathmandu',
+      address: 'Damak, Jhapa',
       distance: '0.8 km',
       isOpen: true,
       openTime: '10:00 AM',
@@ -61,7 +61,7 @@ const getMockBusinesses = (category: string): Business[] => {
       ],
       rating: 4.6,
       reviewCount: 189,
-      address: 'Durbar Marg, Kathmandu',
+      address: 'Birtamode, Jhapa',
       distance: '1.2 km',
       isOpen: true,
       openTime: '9:00 AM',
@@ -79,7 +79,7 @@ const getMockBusinesses = (category: string): Business[] => {
       ],
       rating: 4.9,
       reviewCount: 312,
-      address: 'Lazimpat, Kathmandu',
+      address: 'Bhadrapur, Jhapa',
       distance: '2.1 km',
       isOpen: false,
       openTime: '10:00 AM',
@@ -95,7 +95,7 @@ const getMockBusinesses = (category: string): Business[] => {
       ],
       rating: 4.7,
       reviewCount: 156,
-      address: 'Kupondole, Lalitpur',
+      address: 'Kathmandu, Nepal',
       distance: '3.4 km',
       isOpen: true,
       openTime: '10:00 AM',
@@ -112,7 +112,7 @@ const getMockBusinesses = (category: string): Business[] => {
       ],
       rating: 4.5,
       reviewCount: 98,
-      address: 'Jhamsikhel, Lalitpur',
+      address: 'Bhadrapur, Nepal',
       distance: '4.2 km',
       isOpen: true,
       openTime: '9:30 AM',
@@ -127,10 +127,16 @@ const getMockBusinesses = (category: string): Business[] => {
 
 export default function CategoryScreen() {
   const { slug } = useLocalSearchParams();
+  const { selectedLocation } = useLocation();
   const [loading, setLoading] = useState(false);
   
   const categoryName = typeof slug === 'string' ? slug : 'Category';
-  const businesses = getMockBusinesses(categoryName);
+  
+  // Filter businesses based on selected location
+  const allBusinesses = getMockBusinesses(categoryName);
+  const businesses = selectedLocation
+    ? allBusinesses.filter(b => b.address.includes(selectedLocation))
+    : allBusinesses;
 
   const handleCall = (phone: string) => {
     Linking.openURL(`tel:${phone}`);
@@ -251,7 +257,7 @@ export default function CategoryScreen() {
             handleWhatsApp(item.phone);
           }}
         >
-          <MaterialCommunityIcons name="whatsapp" size={16} color="green" />
+            <MaterialCommunityIcons name="whatsapp" size={20} color="#25D366" />
           <Text style={styles.actionButtonText}>WhatsApp</Text>
         </TouchableOpacity>
 
@@ -294,6 +300,16 @@ export default function CategoryScreen() {
             <Text style={styles.title}>{categoryName}</Text>
             <Text style={styles.subtitle}>{businesses.length} places found</Text>
           </View>
+          <TouchableOpacity
+            style={styles.locationButton}
+            onPress={() => router.push('/location-selection')}
+          >
+            <Ionicons name="location-sharp" size={16} color="#0D9488" />
+            <Text style={styles.locationText} numberOfLines={1}>
+              {selectedLocation || 'Choose Location'}
+            </Text>
+            <Ionicons name="chevron-down" size={14} color="#666" />
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
 
@@ -358,32 +374,33 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#fff',
-    borderRadius: 12,
-    marginBottom: 12,
+    borderRadius: 16,
+    marginBottom: 16,
     overflow: 'hidden',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowRadius: 8,
+    elevation: 3,
   },
   imageGallery: {
-    paddingTop: 12,
-    height: 180,
+    height: 160,
   },
   imageGalleryContent: {
-    paddingHorizontal: 12,
+    paddingLeft: 12,
+    paddingVertical: 12,
     gap: 10,
   },
   imageGalleryCentered: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingLeft: 0,
   },
   imageWrapper: {
-    width: 220,
-    height: 160,
-    borderRadius: 10,
+    width: 240,
+    height: '100%',
+    borderRadius: 12,
     overflow: 'hidden',
   },
   image: {
@@ -392,31 +409,41 @@ const styles = StyleSheet.create({
     backgroundColor: '#e5e7eb',
   },
   content: {
-    padding: 12,
+    padding: 14,
   },
   header: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
     marginBottom: 8,
   },
   name: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#000',
-    marginBottom: 5,
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#111827',
+    flex: 1,
+    marginRight: 12,
   },
   ratingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#FFFBEB',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#FDE68A',
   },
   rating: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#000',
-    marginLeft: 3,
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: '#D97706',
+    marginLeft: 4,
   },
   reviewCount: {
     fontSize: 12,
-    color: '#666',
-    marginLeft: 3,
+    color: '#F59E0B',
+    marginLeft: 4,
   },
   locationRow: {
     flexDirection: 'row',
@@ -424,109 +451,128 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   address: {
-    fontSize: 13,
-    color: '#666',
-    marginLeft: 3,
+    fontSize: 14,
+    color: '#4B5563',
+    marginLeft: 6,
     flex: 1,
   },
   distance: {
     fontSize: 12,
-    color: 'green',
-    backgroundColor: '#d1fae5',
+    color: '#059669',
+    backgroundColor: '#D1FAE5',
     paddingVertical: 4,
-    paddingHorizontal: 6,
-    borderRadius: 6,
+    paddingHorizontal: 8,
+    borderRadius: 20,
     fontWeight: '600',
-    marginLeft: 4,
+    marginLeft: 8,
+    overflow: 'hidden',
   },
   statusRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 4,
   },
   statusBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 6,
+    borderRadius: 20,
     marginRight: 8,
   },
   openBadge: {
-    backgroundColor: '#d1fae5',
+    backgroundColor: '#D1FAE5',
   },
   closedBadge: {
-    backgroundColor: '#fee2e2',
+    backgroundColor: '#FEE2E2',
   },
   statusDot: {
-    width: 5,
-    height: 5,
+    width: 6,
+    height: 6,
     borderRadius: 3,
-    marginRight: 4,
+    marginRight: 6,
   },
   openDot: {
-    backgroundColor: '#10b981',
+    backgroundColor: '#10B981',
   },
   closedDot: {
-    backgroundColor: '#ef4444',
+    backgroundColor: '#EF4444',
   },
   statusText: {
     fontSize: 12,
     fontWeight: '600',
   },
   openText: {
-    color: '#059669',
+    color: '#065F46',
   },
   closedText: {
-    color: '#dc2626',
+    color: '#991B1B',
   },
   hours: {
-    fontSize: 12,
-    color: '#666',
+    fontSize: 13,
+    color: '#4B5563',
   },
   actions: {
     borderTopWidth: 1,
-    borderTopColor: '#f3f4f6',
-    paddingTop: 12,
-    paddingBottom: 10,
+    borderTopColor: '#F3F4F6',
+    paddingVertical: 8,
   },
   actionsScrollContent: {
     paddingHorizontal: 12,
-    gap: 8,
+    gap: 10,
   },
   actionButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 8,
-    gap: 5,
+    paddingHorizontal: 14,
+    height: 38,
+    borderRadius: 20,
+    gap: 6,
     borderWidth: 1,
   },
   callButton: {
-    backgroundColor: '#3b82f6',
-    borderColor: '#3b82f6',
+    backgroundColor: '#2563EB',
+    borderColor: '#2563EB',
   },
   whatsappButton: {
-    backgroundColor: '#fff',
-    borderColor: '#000',
+    backgroundColor: '#F9FAFB',
+    borderColor: '#D1D5DB',
   },
   directionButton: {
-    backgroundColor: '#fff',
-    borderColor: '#000',
+    backgroundColor: '#F9FAFB',
+    borderColor: '#D1D5DB',
   },
   shareButton: {
-    backgroundColor: '#fff',
-    borderColor: '#000',
+    backgroundColor: '#F9FAFB',
+    borderColor: '#D1D5DB',
   },
   callButtonText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 13,
     fontWeight: '600',
   },
   actionButtonText: {
-    color: '#000',
+    color: '#374151',
     fontSize: 13,
     fontWeight: '600',
+  },
+  locationButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F9FAFB',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    maxWidth: 150,
+  },
+  locationText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#111827',
+    marginHorizontal: 4,
+    flexShrink: 1,
   },
 });
