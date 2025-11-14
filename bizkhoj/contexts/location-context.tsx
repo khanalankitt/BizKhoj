@@ -1,9 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-
-interface LocationContextType {
-  selectedLocation: string | null;
-  setSelectedLocation: (location: string) => void;
-}
+import { LocationContextType } from '../app/utils/types';
 
 const LocationContext = createContext<LocationContextType | undefined>(undefined);
 

@@ -80,7 +80,7 @@ export default function RegisterScreen() {
               </TouchableOpacity>
               <View style={styles.logoContainer}>
                 <Image
-                  source={require('@/assets/images/bizkhoj.png')}
+                  source={require('../assets/images/bizkhoj.png')}
                   style={styles.logo}
                   resizeMode="contain"
                 />

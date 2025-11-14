@@ -57,7 +57,7 @@ export default function LoginScreen() {
           <SafeAreaView edges={['top']}>
             <View style={styles.logoContainer}>
               <Image
-                source={require('@/assets/images/bizkhoj.png')}
+                source={require('../assets/images/bizkhoj.png')}
                 style={styles.logo}
                 resizeMode="contain"
               />

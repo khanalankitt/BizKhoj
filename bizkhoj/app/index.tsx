@@ -18,10 +18,10 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 
-import { SearchBar, SearchBarRef } from "@/components/search-bar";
-import { CategoryCard } from "@/components/category-card";
-import { TrendingSearches } from "@/components/trending-searches";
-import { useLocation } from "@/contexts/location-context";
+import { SearchBar, SearchBarRef } from "../components/search-bar";
+import { CategoryCard } from "../components/category-card";
+import { TrendingSearches } from "../components/trending-searches";
+import { useLocation } from "../contexts/location-context";
 
 const categories = [
   {

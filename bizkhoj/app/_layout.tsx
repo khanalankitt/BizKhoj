@@ -3,8 +3,8 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
-import { LocationProvider } from '@/contexts/location-context';
+import { useColorScheme } from '../hooks/use-color-scheme';
+import { LocationProvider } from '../contexts/location-context';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
