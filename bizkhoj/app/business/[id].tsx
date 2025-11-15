@@ -27,6 +27,7 @@ export default function BusinessDetailScreen() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [newReview, setNewReview] = useState("");
   const [newRating, setNewRating] = useState(3);
+  const [isFavorite, setIsFavorite] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
 
   const businessId = typeof id === "string" ? id : "";
@@ -75,6 +76,17 @@ export default function BusinessDetailScreen() {
     }
   };
 
+  const handleToggleFavorite = () => {
+    setIsFavorite(!isFavorite);
+    // Here you would typically save to backend or local storage
+    if (!isFavorite) {
+      console.log("Added to favorites:", business.name);
+      // You could show a toast notification here
+    } else {
+      console.log("Removed from favorites:", business.name);
+    }
+  };
+
   const handleScroll = (event: any) => {
     const slideSize = width;
     const index = Math.round(event.nativeEvent.contentOffset.x / slideSize);
@@ -108,12 +120,24 @@ export default function BusinessDetailScreen() {
             style={styles.imageOverlay}
           >
             <SafeAreaView edges={["top"]}>
-              <TouchableOpacity
-                style={styles.backButton}
-                onPress={() => router.back()}
-              >
-                <Ionicons name="arrow-back" size={24} color="#fff" />
-              </TouchableOpacity>
+              <View style={styles.headerActions}>
+                <TouchableOpacity
+                  style={styles.backButton}
+                  onPress={() => router.back()}
+                >
+                  <Ionicons name="arrow-back" size={24} color="#fff" />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.favoriteButton}
+                  onPress={handleToggleFavorite}
+                >
+                  <Ionicons
+                    name={isFavorite ? "heart" : "heart-outline"}
+                    size={24}
+                    color={isFavorite ? "#ef4444" : "#fff"}
+                  />
+                </TouchableOpacity>
+              </View>
             </SafeAreaView>
           </LinearGradient>
 
@@ -388,6 +412,13 @@ const styles = StyleSheet.create({
     right: 0,
     height: 100,
   },
+  headerActions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    marginTop: 6,
+  },
   backButton: {
     width: 36,
     height: 36,
@@ -395,8 +426,14 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.4)",
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: 12,
-    marginTop: 6,
+  },
+  favoriteButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "rgba(0,0,0,0.4)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   imagePagination: {
     position: "absolute",
