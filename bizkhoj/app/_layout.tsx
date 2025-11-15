@@ -64,6 +64,20 @@ export default function RootLayout() {
               animation: 'slide_from_right',
             }} 
           />
+           <Stack.Screen 
+            name="list-business-phone" 
+            options={{ 
+              headerShown: false,
+              animation: 'slide_from_bottom',
+            }} 
+          />
+           <Stack.Screen 
+            name="register-business" 
+            options={{ 
+              headerShown: false,
+              animation: 'slide_from_right',
+            }} 
+          />
         </Stack>
         <StatusBar style="dark" />
       </ThemeProvider>

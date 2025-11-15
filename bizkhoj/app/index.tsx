@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   BackHandler,
+  ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -243,6 +244,10 @@ export default function Index() {
     router.push("/location-selection");
   };
 
+  const handleStartNow = () => {
+    router.push("/list-business-phone");
+  };
+
   const searchBarAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: searchBarTranslateY.value }],
   }));
@@ -322,21 +327,70 @@ export default function Index() {
         {isSearchFocused ? (
           <TrendingSearches onSearchSelect={handleTrendingSelect} />
         ) : (
-          <FlatList
-            data={categories}
-            renderItem={({ item, index }) => (
-              <CategoryCard
-                name={item.name}
-                icon={item.icon}
-                colors={item.colors}
-                onPress={() => router.push(`/category/${item.name}`)}
-              />
-            )}
-            keyExtractor={(item) => item.id}
-            numColumns={4}
+          <ScrollView 
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.categoriesContainer}
-          />
+            contentContainerStyle={styles.scrollContent}
+          >
+            <FlatList
+              data={categories}
+              renderItem={({ item, index }) => (
+                <CategoryCard
+                  name={item.name}
+                  icon={item.icon}
+                  colors={item.colors}
+                  onPress={() => router.push(`/category/${item.name}`)}
+                />
+              )}
+              keyExtractor={(item) => item.id}
+              numColumns={4}
+              scrollEnabled={false}
+              contentContainerStyle={styles.categoriesContainer}
+            />
+
+            {/* List Your Business Section */}
+            <View style={styles.listBusinessSection}>
+              <View style={styles.listBusinessCard}>
+                <View style={styles.listBusinessHeader}>
+                  <View style={styles.businessIconLarge}>
+                    <Ionicons name="storefront" size={28} color="#0D9488" />
+                  </View>
+                </View>
+
+                <Text style={styles.listBusinessMainTitle}>
+                  List Your Business for <Text style={styles.freeTextLarge}>FREE</Text>
+                </Text>
+                <Text style={styles.listBusinessDescription}>
+                  Reach <Text style={styles.highlightText}>thousands</Text> of customers by listing on BizKhoj
+                </Text>
+
+                <TouchableOpacity style={styles.getStartedButton} onPress={handleStartNow}>
+                  <Text style={styles.getStartedButtonText}>Get Started</Text>
+                  <Ionicons name="arrow-forward" size={18} color="#FFFFFF" />
+                </TouchableOpacity>
+
+                <View style={styles.benefitsGrid}>
+                  <View style={styles.benefitCard}>
+                    <Ionicons name="checkmark-circle" size={20} color="#10B981" />
+                    <Text style={styles.benefitCardText}>
+                      <Text style={styles.benefitCardBold}>Free</Text> forever
+                    </Text>
+                  </View>
+                  <View style={styles.benefitCard}>
+                    <Ionicons name="flash" size={20} color="#F59E0B" />
+                    <Text style={styles.benefitCardText}>
+                      <Text style={styles.benefitCardBold}>2 mins</Text> setup
+                    </Text>
+                  </View>
+                  <View style={styles.benefitCard}>
+                    <Ionicons name="eye" size={20} color="#3B82F6" />
+                    <Text style={styles.benefitCardText}>
+                      Instant <Text style={styles.benefitCardBold}>visibility</Text>
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </ScrollView>
         )}
       </SafeAreaView>
     </View>
@@ -428,9 +482,114 @@ const styles = StyleSheet.create({
   categoriesContainer: {
     paddingHorizontal: 12,
     paddingTop: 4,
-    paddingBottom: 20,
+    paddingBottom: 12,
   },
   bottomSpacing: {
     height: 20,
+  },
+  scrollContent: {
+    paddingBottom: 20,
+  },
+  listBusinessSection: {
+    paddingHorizontal: 20,
+    paddingTop: 8,
+    paddingBottom: 20,
+  },
+  listBusinessCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
+    borderWidth: 1,
+    borderColor: '#F3F4F6',
+  },
+  listBusinessHeader: {
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  businessIconLarge: {
+    width: 60,
+    height: 60,
+    borderRadius: 16,
+    backgroundColor: '#ECFDF5',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  listBusinessMainTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#111827',
+    textAlign: 'center',
+    marginBottom: 6,
+    lineHeight: 28,
+  },
+  freeTextLarge: {
+    color: '#10B981',
+  },
+  listBusinessDescription: {
+    fontSize: 13,
+    color: '#6B7280',
+    textAlign: 'center',
+    lineHeight: 20,
+    marginBottom: 18,
+  },
+  highlightText: {
+    fontWeight: '700',
+    color: '#0D9488',
+  },
+  getStartedButton: {
+    backgroundColor: '#0D9488',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 14,
+    borderRadius: 12,
+    marginBottom: 18,
+    shadowColor: '#0D9488',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  getStartedButtonText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '600',
+    marginRight: 6,
+  },
+  benefitsGrid: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 10,
+  },
+  benefitCard: {
+    flex: 1,
+    backgroundColor: '#F9FAFB',
+    borderRadius: 10,
+    padding: 10,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#F3F4F6',
+  },
+  benefitCardText: {
+    fontSize: 11,
+    color: '#4B5563',
+    marginTop: 4,
+    textAlign: 'center',
+    lineHeight: 14,
+  },
+  benefitCardBold: {
+    fontWeight: '700',
+    color: '#111827',
   },
 });
